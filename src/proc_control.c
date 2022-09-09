@@ -204,7 +204,7 @@ void ptrace_attach(trackedprocess_t *tracked_proc) {
   XSTATS_START_TIMER(attaching);
   int status;
   long r;
-  // seize_process(tracked_proc, 1);
+  seize_process(tracked_proc, 1);
   interrupt_process(tracked_proc);
   XSTATS_END_TIMER(attaching);
 }
@@ -213,7 +213,7 @@ void ptrace_detach(trackedprocess_t *tracked_proc) {
   jprint(LVL_TEST,
          "Will Detach and let the tracee %d and its %ld threads continue",
          tracked_proc->pid, tracked_proc->tid_count);
-  detach_or_cont_process(tracked_proc, 0);
+  detach_or_cont_process(tracked_proc, 1);
 }
 
 void open_proc_fds(trackedprocess_t *tracked_proc) {
