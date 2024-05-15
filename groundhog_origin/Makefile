@@ -2,8 +2,9 @@ CC    := gcc
 DIR   := $(PWD)
 BDIR  := $(DIR)/build
 SRC     := $(wildcard src/*.c src/libs/*.c)
-NAME    := faasafe-launcher
-NAME_TRACEE_LIB    := faasafe-tracee-lib.so
+NAME    := groundhog-launcher
+NAME_TRACEE_LIB    := groundhog-tracee-lib.so
+TRACEE_LIB_SRC := src/c_lib_tracee.c  src/c_lib_tracee.h 
 CFLAGS  := -pedantic -Wall -Werror -W -g -pthread -fstack-protector -Wunused-function #-pg
 LFLAGS  := -lrt -lm -g -lpthread #-pg
 
@@ -17,7 +18,7 @@ all: $(SRC) $(BDIR)
 	$(MAKE) -C tests/
 	$(CC) -fPIC -shared -o $(BDIR)/$(NAME_TRACEE_LIB) $(TRACEE_LIB_SRC)
 	$(CC) -static src/dump_sd_bits/dump_sd_pages.c -O0 -o build/dump_sd_pages -Wall
-	@sudo setcap cap_sys_ptrace,cap_sys_admin+ep build/faasafe-launcher
+	@sudo setcap cap_sys_ptrace,cap_sys_admin+ep build/groundhog-launcher
 
 runtests:
 	./test.sh
