@@ -10,8 +10,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "libs/xdebug.h"
-
 // LVL_DBG independently dumps both Groundhog's view of the soft-dirty bits as
 // well as
 // the view from another program. To allow an external program access the /proc
