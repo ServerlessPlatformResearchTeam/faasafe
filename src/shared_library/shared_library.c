@@ -1,16 +1,12 @@
 #include "shared_library.h"
 
-#if RESTORE_TIME
-struct timespec checkpoint_time;
-#endif
 static char *acks = NULL;
 static size_t ackssize = 0;
 static FILE *stdcmdin = NULL;
 static FILE *stdcmdout = NULL;
+
 static void open_pipes() {
   if (stdcmdin == NULL) {
-    // acks = (char d*) malloc(BUFSIZ * sizeof(char));
-    // fflush(stdout);
     stdcmdin = fdopen(4, "r");
     stdcmdout = fdopen(5, "w");
   }
@@ -23,46 +19,29 @@ static void close_pipes() {
   }
 }
 
-int checkpoint_me() {
+// shared library에서 제공하는 함수(명령어) 총 3개
+// checkpoint : 현재상태를 저장
+// rewind : 저장된 상태로 복원
+// dump_stats : faasafe 상태 출력
+
+int faasafe_checkpoint() {
   open_pipes();
-#if RESTORE_TIME
-  if (clock_gettime(CLOCK_REALTIME, &checkpoint_time) == -1) {
-    perror("clock gettime");
-    exit(EXIT_FAILURE);
-  }
-#endif
-  fprintf(stdcmdout, "checkpoint.me\n");
-  fflush(stdcmdout);
-  getline((char **)&acks, &ackssize, stdcmdin);
-#if RESTORE_TIME
-  if (clock_settime(CLOCK_REALTIME, &checkpoint_time) == -1) {
-    perror("clock settime");
-    exit(EXIT_FAILURE);
-  }
-#endif
-  // assert(strncmp(*acks, "NO!\n",3) == 0);
-  return 0;
-}
-
-int nop_me() {
-  fprintf(stdcmdout, "nop.me\n");
+  fprintf(stdcmdout, "faasafe_checkpoint\n");
   fflush(stdcmdout);
   getline((char **)&acks, &ackssize, stdcmdin);
   return 0;
 }
 
-int restore_me() {
-  fprintf(stdcmdout, "restore.me\n");
+int faasafe_rewind() {
+  fprintf(stdcmdout, "faasafe_rewind\n");
   fflush(stdcmdout);
   getline((char **)&acks, &ackssize, stdcmdin);
   return 0;
 }
 
-int dump_stats_me() {
-  fprintf(stdcmdout, "dump_stats.me\n");
+int faasafe_dump_stats() {
+  fprintf(stdcmdout, "faasafe_dump_stats\n");
   fflush(stdcmdout);
   getline((char **)&acks, &ackssize, stdcmdin);
   return 0;
 }
-
-
