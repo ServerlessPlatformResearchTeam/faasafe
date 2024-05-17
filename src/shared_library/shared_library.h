@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 int faasafe_checkpoint();
+int faasafe_save_page(void * page);
 int faasafe_rewind();
 int faasafe_dump_stats();
 

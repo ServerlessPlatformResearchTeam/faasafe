@@ -15,5 +15,8 @@ gh: $(SRC) $(BDIR)
 sharedlib: $(SRC) $(BDIR)
 	$(CC) -fPIC -shared -o $(BDIR)/$(SHARED_LIB_NAME) $(SHARED_LIB_SRC)
 
+test: gh sharedlib
+	${BDIR}/${NAME} /usr/bin/python3 ./test/basic-test.py
+
 $(BDIR):
 	@mkdir -p $@

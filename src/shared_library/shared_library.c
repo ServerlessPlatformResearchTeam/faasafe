@@ -21,6 +21,7 @@ static void close_pipes() {
 
 // shared library에서 제공하는 함수(명령어) 총 3개
 // checkpoint : 현재상태를 저장
+// save_page [start address] : start address 에서 시작하는 페이지를 저장
 // rewind : 저장된 상태로 복원
 // dump_stats : faasafe 상태 출력
 
@@ -30,6 +31,12 @@ int faasafe_checkpoint() {
   fflush(stdcmdout);
   getline((char **)&acks, &ackssize, stdcmdin);
   return 0;
+}
+
+int faasafe_save_page(void * page) {
+  fprintf(stdcmdout, "faasafe_save_page %p\n", page);
+  fflush(stdcmdout);
+  getline((char **)&acks, &ackssize, stdcmdin);
 }
 
 int faasafe_rewind() {
